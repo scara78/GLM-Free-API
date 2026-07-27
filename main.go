@@ -714,14 +714,6 @@ func initDB() error {
     }
     globalDB.SetMaxOpenConns(1)
     globalDB.SetMaxIdleConns(1)
-    if _, err := globalDB.Exec(`CREATE TABLE IF NOT EXISTS tokens (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        token TEXT NOT NULL,
-        batch INTEGER NOT NULL DEFAULT 0
-    )`); err != nil {
-        globalDB.Close()
-        return err
-    }
     return nil
 }
 
@@ -4157,6 +4149,11 @@ func main() {
     flag.BoolVar(&verbose, "verbose", false, "Enable verbose logging")
     flag.BoolVar(&config.AgentMode, "agent-mode", config.AgentMode, "Enable agent mode: translate tools & roles for Z.AI compatibility")
     flag.Parse()
+
+    if _, err := os.Stat(dbPath); err != nil {
+        log.Println("Captcha db not found! Please run captcha.go first")
+        os.Exit(1)
+    }
 
     logInfo("Starting with db-path='" + dbPath + "' verbose=true")
 

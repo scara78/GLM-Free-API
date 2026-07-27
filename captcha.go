@@ -667,9 +667,6 @@ func runParallel(browser playwright.Browser, tokenCount, batchCount, workers int
 // Disables background throttling, unnecessary services, and automation
 // detection — keeps the renderer hot and avoids IPC storms.
 var chromiumPerfArgs = []string{
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
     "--disable-blink-features=AutomationControlled",
     "--disable-background-timer-throttling",
     "--disable-renderer-backgrounding",
