@@ -1,0 +1,13 @@
+.git
+.gitignore
+.env
+.env.*
+*.log
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+zai-bridge
+token-collector
+image-gen/
+README.md
+AI_RULES.md

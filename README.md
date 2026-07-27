@@ -139,6 +139,19 @@ go run main.go
 
 On startup, you'll see a banner with your health URL, API endpoints, and auth token. The Z.AI session is initialised asynchronously — if guest init fails, the first chat request will retry it.
 
+### EasyPanel (Dockerfile)
+
+1. Create an **App** service in EasyPanel and connect this Git repository.
+2. Select **Dockerfile** as the build method. The repository root and the default `Dockerfile` are ready to use.
+3. Set the service/container port to `3001` (or match the value configured in `PORT`).
+4. Add a persistent volume mounted at `/data`. The app creates `/data/tokens.sqlite` automatically when the volume is empty.
+5. Configure environment variables, especially a strong `AUTH_TOKEN`; optionally set `ZAI_TOKEN`, `AGENT_MODE=true`, `LOG_LEVEL=info`, and `TIMEOUT=300000`.
+6. Add a domain in EasyPanel and route it to the service port. `/status` is the container liveness endpoint; `/health` reports `503` until the upstream Z.AI session is connected.
+
+> The empty database only lets the container start cleanly. Captcha-backed chat requests still require valid device-token rows in `/data/tokens.sqlite`. Populate that persistent database with `captcha.go` before serving requests, or restore an existing token database into the `/data` volume.
+
+The image is built as a static Go binary, runs as a non-root user, listens on `0.0.0.0`, and keeps all mutable SQLite state in `/data`.
+
 ---
 
 ## Configuration
